@@ -37,20 +37,20 @@ int main()
                                    &osmium::Node::id);
 
     struct Handler : osmium::handler::Handler {
-        sol::state& lua;
 
         Handler(sol::state &s) : lua(s){
         // register lua function
         lua.script("(function handsy(n) return 0 end)");
         };
 
-        void handleNode(osmium::Node &node)
+        void handleNode(const osmium::Node &node)
         {
             // retrieve lua function
             sol::function handsy = lua["handsy"];
             // call lua function with variable type
             handsy(node);
         };
+        sol::state& lua;
     };
 
     return 0;
