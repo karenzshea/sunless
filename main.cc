@@ -1,4 +1,5 @@
 #include <osmium/osm.hpp>
+#include <osmium/handler.hpp>
 #include <sol.hpp>
 
 namespace sol
@@ -35,11 +36,22 @@ int main()
                                    "id",
                                    &osmium::Node::id);
 
-    osmium::Node foo;
+    struct Handler : osmium::handler::Handler {
+        sol::state& lua;
 
-    lua.script("function Fun (x) return end");
-    sol::function Fun = lua["Fun"];
-    Fun(foo);
+        Handler(sol::state &s) : lua(s){
+        // register lua function
+        lua.script("(function handsy(n) return 0 end)");
+        };
+
+        void handleNode(osmium::Node &node)
+        {
+            // retrieve lua function
+            sol::function handsy = lua["handsy"];
+            // call lua function with variable type
+            handsy(node);
+        };
+    };
 
     return 0;
 }
