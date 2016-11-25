@@ -12,19 +12,6 @@ template <> struct is_container<osmium::Way> : std::false_type
 };
 }
 
-namespace sol
-{
-namespace meta
-{
-template <> struct has_key_value_pair<osmium::Node> : std::false_type
-{
-};
-template <> struct has_key_value_pair<osmium::Way> : std::false_type
-{
-};
-}
-}
-
 int main()
 {
     sol::state lua;
@@ -37,7 +24,6 @@ int main()
                                    &osmium::Node::id);
 
     struct Handler : osmium::handler::Handler {
-
         Handler(sol::state &s) : lua(s){
         // register lua function
         lua.script("(function handsy(n) return 0 end)");
