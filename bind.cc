@@ -40,29 +40,29 @@ inline FloatLongitude toFloating(const FixedLongitude fixed)
 
 struct Coordinate
 {
-    FixedLongitude lon;
-    FixedLatitude lat;
+    double lon;
+    double lat;
 };
 
 template <class T> double latToDouble(T const &object)
 {
-    return static_cast<double>(toFloating(object.lat));
+    return static_cast<double>(object.lat);
 }
 template <class T> double lonToDouble(T const &object)
 {
-    return static_cast<double>(toFloating(object.lon));
+    return static_cast<double>(object.lon);
 }
 
 int main()
 {
 
     sol::state lua;
-    lua.script("function segment_func (source) val = source.lon return 0 end");
+    lua.script("function segment_func (source) val = source.lon() return 0 end");
 
     lua.new_usertype<Coordinate>(
         "Coordinate", "lon", &lonToDouble<Coordinate>, "lat", &latToDouble<Coordinate>);
 
-    Coordinate a_coord = {5000, 6500};
+    Coordinate a_coord = {5.000, 6.500};
 
     sol::function segment_function = lua["segment_func"];
     segment_function(a_coord);
